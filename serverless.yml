@@ -1,0 +1,28 @@
+app: aws-python-rest-api
+service: aws-python-rest-api
+
+frameworkVersion: '2'
+variablesResolutionMode: '20210219'
+configValidationMode: 'error'
+
+provider:
+  name: aws
+  region: ap-northeast-1
+  runtime: python3.8
+  lambdaHashingVersion: '20201221'
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    LINE_CHANNEL_SECRET: ${file(./secrets.json):LINE_CHANNEL_SECRET}
+    LINE_CHANNEL_ACCESS_TOKEN: ${file(./secrets.json):LINE_CHANNEL_ACCESS_TOKEN}
+functions:
+  line_bot:
+    handler: handler.webhook
+    events:
+      - http:
+          path: webhook
+          method: post
+
+plugins:
+  - serverless-offline
+  - serverless-python-requirements
